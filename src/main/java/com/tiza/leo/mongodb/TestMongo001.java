@@ -9,7 +9,6 @@ import org.bson.Document;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.omg.CORBA.PUBLIC_MEMBER;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,13 +28,13 @@ public class TestMongo001 {
     public void before(){
         mongoClient =new MongoClient("192.168.121.102",27017);
     }
-    @After
+   /* @After
     public void after(){
         mongoClient.close();
-    }
+    }*/
 
     /**
-     * 获取所有数据名称
+     * 获取所有数据名称-----报错
      */
     @Test
     public void testDatabaseNames(){
@@ -47,7 +46,7 @@ public class TestMongo001 {
 
 
     /**
-     * 获取所有集合名称
+     * 获取所有集合名称-----报错
      */
     @Test
     public void testGetCollectionNames(){
@@ -62,8 +61,8 @@ public class TestMongo001 {
 
     @Test
     public void testGetCollection(){
-        MongoDatabase ems = mongoClient.getDatabase("ems");
-        MongoCollection<Document> t_user = ems.getCollection("t_user");
+        MongoDatabase ems = mongoClient.getDatabase("ems444");
+        MongoCollection<Document> t_user = ems.getCollection("t_user444");
         System.out.println("t_user = " + t_user);
     }
 

@@ -25,41 +25,41 @@ public class TestMongo003 {
 
     @Before
     public void before() {
-        mongoClient = new MongoClient("192.168.28.136", 27017);
-        database = mongoClient.getDatabase("test");
+        mongoClient = new MongoClient("192.168.121.102", 27017);
+        database = mongoClient.getDatabase("ems");
         t_user = database.getCollection("t_user");
     }
 
     /**
-     * 批量插入
+     * 批量插入--------------------------------------------------------ok
      */
     @Test
     public void testInstert() {
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 15; i++) {
             Document document = new Document();
             document.put("_id", UUID.randomUUID().toString());
-            document.put("name", "chenyn" + i);
-            document.put("age", i);
+            document.put("name", "chenyn" + (i+20));
+            document.put("age", (i+20));
             t_user.insertOne(document);
         }
     }
 
 
     /**
-     * 删除
+     * 删除---------------------------------------------------------ok
      */
     @Test
     public void testDelete() {
-        t_user.deleteMany(Filters.gt("age", 23));
+        t_user.deleteMany(Filters.gt("age", 20));
     }
 
 
     /**
-     * 更新
+     * 更新-----------------------------------------------------------ok
      */
     @Test
     public void testUpdate() {
-        Bson filters = Filters.eq("age", 12);
+        Bson filters = Filters.eq("age", 9);
         t_user.updateOne(filters, new Document("$set", new Document("name", "aa")));
     }
 

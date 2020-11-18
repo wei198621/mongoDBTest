@@ -1,7 +1,5 @@
 package com.tiza.leo.mongodb;
-
-
-        import com.mongodb.MongoClient;
+ import com.mongodb.MongoClient;
         import com.mongodb.client.FindIterable;
         import com.mongodb.client.MongoCollection;
         import com.mongodb.client.MongoDatabase;
@@ -15,7 +13,22 @@ package com.tiza.leo.mongodb;
 
 
 /**
- * 未经过测试 leo
+ * 经过测试 leo
+ *
+ * 处理数据前要经过数据初始化，过程见下
+ *
+ use ems;
+ show tables;
+ db.createCollection("t_user");
+
+ for(var i=0;i<10;i++){
+ db.t_user.insert({"id":i,"name":"xiaohei","addr":"xuzhou","age":11});
+ }
+
+ db.t_user.find();
+ *
+ *
+ *
  */
 public class TestMongo002 {
 
@@ -25,14 +38,14 @@ public class TestMongo002 {
 
     @Before
     public void before() {
-        mongoClient = new MongoClient("192.168.28.136", 27017);
-        database = mongoClient.getDatabase("test");
+        mongoClient = new MongoClient("192.168.121.102", 27017);
+        database = mongoClient.getDatabase("ems");
         t_user = database.getCollection("t_user");
     }
 
 
     /**
-     * 有条件的查询数据
+     * 有条件的查询数据---ok
      */
     @Test
     public void testFind() {
@@ -45,12 +58,13 @@ public class TestMongo002 {
     }
 
     /**
-     * 有条件查询展示指定的字段
+     * 有条件查询展示指定的字段 --- ok
      */
     @Test
     public void testFindField() {
         Document document = new Document();
         document.put("name", "xiaohei");
+
         Document bson = new Document();
         bson.put("_id", 1);
         bson.put("name", 1);
@@ -63,7 +77,7 @@ public class TestMongo002 {
 
 
     /**
-     * 查询数据取值范围
+     * 查询数据取值范围-----ok
      * 条件搜索$lt/ $lte / $gt / $gte /  $ne / $eq <====> < / <= / >  /  >=  /  != /==
      */
     @Test
@@ -77,20 +91,21 @@ public class TestMongo002 {
     }
 
     /**
+     * ---------------------------ok
      * 条件搜索OR查询$in
      * 查询id的值是2或者是3的docuemnt
      */
     @Test
     public void testIn() {
-        FindIterable<Document> documents = t_user.find().filter(Filters.in("_id", new String[]{"2", "3"}));
+        FindIterable<Document> documents = t_user.find().filter(Filters.in("id", new Integer[]{2,3,4}));
         for (Document document : documents) {
             System.out.println(document);
         }
-
     }
 
 
     /**
+     * -------------------------------------------ok
      * 条件搜索OR查询$or
      * 查询id是1或者是name等于jiangzz的所有文档
      */
@@ -99,7 +114,7 @@ public class TestMongo002 {
         Document document1 = new Document();
         document1.put("name", "chenyn");
         Document document2 = new Document();
-        document2.put("age", 52);
+        document2.put("age", 11);
 
         FindIterable<Document> documents = t_user.find().filter(Filters.or(document1, document2));
         for (Document document : documents) {
@@ -108,12 +123,12 @@ public class TestMongo002 {
     }
 
     /**
-     * 模糊查询
+     * 模糊查询---------------------------ok
      */
     @Test
     public void testQueryLike() {
         Document document = new Document();
-        document.put("name", Pattern.compile("n", Pattern.CASE_INSENSITIVE));
+        document.put("name", Pattern.compile("x", Pattern.CASE_INSENSITIVE));
         FindIterable<Document> documents = t_user.find(document);
         for (Document document1 : documents) {
             System.out.println(document1);
@@ -123,7 +138,7 @@ public class TestMongo002 {
 
 
     /**
-     * null值得处理
+     * null值得处理--------------------ok
      */
 
     @Test
@@ -137,7 +152,7 @@ public class TestMongo002 {
     }
 
     /**
-     * 查询数组 查询地址中是北京 上海  广州的记录
+     * 查询数组 查询地址中是北京 上海  广州的记录------------ok
      */
     @Test
     public void testAll() {
@@ -148,12 +163,12 @@ public class TestMongo002 {
     }
 
     /**
-     * 查询数组 查询地址中包含 河北 的document
+     * 查询数组 查询地址中包含 河北 的document---------------ok
      */
     @Test
     public void testArray() {
         Document document1 = new Document();
-        document1.put("address", "hebei");
+        document1.put("address", "beijing");
         FindIterable<Document> address = t_user.find(document1);
         for (Document document : address) {
             System.out.println(document);
@@ -162,7 +177,7 @@ public class TestMongo002 {
 
 
     /**
-     * 对查询结果进行排序
+     * 对查询结果进行排序----------------------------ok
      */
     @Test
     public void testSort() {
@@ -174,7 +189,7 @@ public class TestMongo002 {
 
 
     /**
-     * 对查询结果进行排序 分页查询
+     * 对查询结果进行排序 分页查询-----------------ok
      */
     @Test
     public void testPage() {
